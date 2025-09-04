@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Secuencia para números de matrícula -->
+        <record id="seq_alumno_matricula" model="ir.sequence">
+            <field name="name">Número de Matrícula de Alumno</field>
+            <field name="code">escuela.alumno</field>
+            <field name="prefix">MAT</field>
+            <field name="padding">4</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+    </data>
+</odoo>

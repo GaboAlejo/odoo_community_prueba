@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista de formulario para Alumno -->
+    <record id="view_alumno_form" model="ir.ui.view">
+        <field name="name">escuela.alumno.form</field>
+        <field name="model">escuela.alumno</field>
+        <field name="arch" type="xml">
+            <form string="Alumno">
+                <header>
+                    <button name="toggle_active" type="object" string="Desactivar" class="btn-warning" invisible="not active"/>
+                    <button name="toggle_active" type="object" string="Activar" class="btn-primary" invisible="active"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_related" icon="fa-user">
+                            <field name="activo" widget="statinfo" string="Estado"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="nombre_completo" readonly="1"/>
+                        </h1>
+                        <h2>
+                            <field name="numero_matricula" readonly="1"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group name="informacion_personal" string="Información Personal">
+                            <field name="nombre"/>
+                            <field name="apellido_paterno"/>
+                            <field name="apellido_materno"/>
+                            <field name="fecha_nacimiento"/>
+                            <field name="edad" readonly="1"/>
+                        </group>
+                        <group name="informacion_academica" string="Información Académica">
+                            <field name="grado"/>
+                            <field name="fecha_ingreso"/>
+                            <field name="activo"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="contacto" string="Información de Contacto">
+                            <field name="email"/>
+                            <field name="telefono"/>
+                            <field name="direccion" widget="text"/>
+                        </group>
+                        <group name="emergencia" string="Contacto de Emergencia">
+                            <field name="contacto_emergencia"/>
+                            <field name="telefono_emergencia"/>
+                            <field name="parentesco"/>
+                        </group>
+                    </group>
+                    <group name="notas" string="Notas Adicionales">
+                        <field name="notas" widget="text" nolabel="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de lista para Alumno -->
+    <record id="view_alumno_tree" model="ir.ui.view">
+        <field name="name">escuela.alumno.tree</field>
+        <field name="model">escuela.alumno</field>
+        <field name="arch" type="xml">
+            <tree string="Alumnos" decoration-muted="not active">
+                <field name="numero_matricula"/>
+                <field name="nombre_completo"/>
+                <field name="grado"/>
+                <field name="edad"/>
+                <field name="email"/>
+                <field name="telefono"/>
+                <field name="fecha_ingreso"/>
+                <field name="activo" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda para Alumno -->
+    <record id="view_alumno_search" model="ir.ui.view">
+        <field name="name">escuela.alumno.search</field>
+        <field name="model">escuela.alumno</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Alumnos">
+                <field name="nombre"/>
+                <field name="apellido_paterno"/>
+                <field name="apellido_materno"/>
+                <field name="numero_matricula"/>
+                <field name="email"/>
+                <field name="grado"/>
+                <separator/>
+                <filter string="Activos" name="activos" domain="[('activo', '=', True)]"/>
+                <filter string="Inactivos" name="inactivos" domain="[('activo', '=', False)]"/>
+                <separator/>
+                <filter string="Primer Grado" name="grado1" domain="[('grado', '=', '1')]"/>
+                <filter string="Segundo Grado" name="grado2" domain="[('grado', '=', '2')]"/>
+                <filter string="Tercer Grado" name="grado3" domain="[('grado', '=', '3')]"/>
+                <separator/>
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Grado" name="group_grado" context="{'group_by': 'grado'}"/>
+                    <filter string="Fecha de Ingreso" name="group_fecha_ingreso" context="{'group_by': 'fecha_ingreso'}"/>
+                    <filter string="Estado" name="group_activo" context="{'group_by': 'activo'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vista kanban para Alumno -->
+    <record id="view_alumno_kanban" model="ir.ui.view">
+        <field name="name">escuela.alumno.kanban</field>
+        <field name="model">escuela.alumno</field>
+        <field name="arch" type="xml">
+            <kanban string="Alumnos" class="o_kanban_mobile">
+                <field name="nombre_completo"/>
+                <field name="numero_matricula"/>
+                <field name="grado"/>
+                <field name="edad"/>
+                <field name="email"/>
+                <field name="activo"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="nombre_completo"/>
+                                        </strong>
+                                        <div class="o_kanban_record_subtitle">
+                                            <field name="numero_matricula"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div>
+                                        <strong>Grado:</strong> <field name="grado"/>
+                                    </div>
+                                    <div>
+                                        <strong>Edad:</strong> <field name="edad"/> años
+                                    </div>
+                                    <div t-if="record.email.value">
+                                        <strong>Email:</strong> <field name="email"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Acción de ventana para Alumno -->
+    <record id="action_alumno" model="ir.actions.act_window">
+        <field name="name">Alumnos</field>
+        <field name="res_model">escuela.alumno</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{'search_default_activos': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡Registra tu primer alumno!
+            </p>
+            <p>
+                Comienza agregando la información básica de los estudiantes de tu institución educativa.
+                Podrás gestionar sus datos personales, académicos y de contacto.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menú principal -->
+    <menuitem id="menu_escuela_root" name="Escuela" sequence="10" web_icon="escuela,static/description/icon.png"/>
+    
+    <!-- Menú de Alumnos -->
+    <menuitem id="menu_alumno" 
+              name="Alumnos" 
+              parent="menu_escuela_root" 
+              action="action_alumno" 
+              sequence="10"/>
+
+</odoo>
